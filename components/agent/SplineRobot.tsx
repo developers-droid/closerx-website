@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import type { Application } from "@splinetool/runtime";
 
-export const SPLINE_SCENE =
-  "https://prod.spline.design/fP0LH65i8bXQDQjZ/scene.splinecode";
+// Keep the published scene same-origin so browser privacy tools, corporate
+// proxies, and transient Spline CDN failures cannot prevent the hero loading.
+export const SPLINE_SCENE = "/spline/scene.splinecode";
 
 /**
  * Spline's npm runtime ships `new URL(...)` references to Draco/WASM files it

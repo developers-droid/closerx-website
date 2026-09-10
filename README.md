@@ -24,11 +24,15 @@ npm start        # serve the production build
 
 ## The 3D agent
 
-The hero robot is a Spline scene:
+The hero robot is exported from this Spline scene:
 
 ```
 https://prod.spline.design/fP0LH65i8bXQDQjZ/scene.splinecode
 ```
+
+The exported file is vendored at `public/spline/scene.splinecode` and loaded
+from the same origin. This prevents browser network policies or a transient CDN
+failure from breaking the hero at runtime.
 
 Cursor tracking is built into the scene itself — the head, torso and arms react
 to the pointer with no tracking code on our side. The scene needs real pointer
@@ -65,8 +69,9 @@ npm run sync:spline
 
 ### Swapping in a different scene
 
-Publish from Spline, copy the `.splinecode` URL, and change `SPLINE_SCENE` at the
-top of `components/agent/SplineRobot.tsx`. Nothing else needs to move.
+Publish from Spline and replace `public/spline/scene.splinecode` with the new
+download. `SPLINE_SCENE` in `components/agent/SplineRobot.tsx` should remain the
+same-origin `/spline/scene.splinecode` path.
 
 ## Layout notes
 
