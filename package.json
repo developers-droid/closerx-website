@@ -1,0 +1,26 @@
+{
+  "name": "closerx-landing",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "sync:spline": "node -e \"const fs=require('fs'),p='node_modules/@splinetool/runtime/build/';fs.mkdirSync('public/spline',{recursive:true});fs.copyFileSync(p+'runtime.standalone.webgl.js','public/spline/runtime.js');for(const f of ['boolean','gaussian-splat-compression','hana-ui','howler','navmesh','opentype','physics','process'])fs.copyFileSync(p+f+'.js','public/spline/'+f+'.js');console.log('synced public/spline from @splinetool/runtime')\""
+  },
+  "dependencies": {
+    "@splinetool/runtime": "^2.0.40",
+    "motion": "^13.2.0",
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

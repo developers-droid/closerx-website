@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+@theme {
+  /*
+   * Brand ramp. The two fixed points are the page ground rgb(72,61,139) and
+   * the card fill rgb(58,49,111) — both sit at hue 248.5 / saturation 39%, so
+   * every other step is the same hue at a different lightness.
+   */
+  --color-brand-50: #f4f2fb;
+  --color-brand-100: #ddd9f1;
+  --color-brand-200: #b8b1e2;
+  --color-brand-300: #9086cf;
+  --color-brand-400: #6d61b8;
+  --color-brand-500: #574aa5;
+  --color-brand-600: #483d8b; /* page ground */
+  --color-brand-700: #3f3679;
+  --color-brand-800: #3a316f; /* card fill */
+  --color-brand-900: #2e2757;
+  --color-brand-950: #1e1a3a;
+
+  --color-page: #483d8b;
+  --color-page-deep: #3f3679;
+  --color-card: #3a316f;
+  --color-card-soft: #443a82;
+  --color-ink: #f4f2fb;
+  --color-ink-dim: #d6d0ee;
+  --color-accent: #ffd84a;
+
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-marquee-slow: marquee 46s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-spin-slow: spin 26s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  70% { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes badge-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  20% { transform: translateX(-4px) rotate(-5deg); }
+  40% { transform: translateX(4px) rotate(5deg); }
+  60% { transform: translateX(-3px) rotate(-3deg); }
+  80% { transform: translateX(3px) rotate(3deg); }
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-page);
+}
+
+body {
+  background-color: var(--color-page);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img,
+video,
+canvas {
+  max-width: 100%;
+}
+
+p,
+li,
+blockquote {
+  overflow-wrap: anywhere;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #1b1533;
+}
+
+/* Thin gradient rule pinned to the very top of the page */
+.top-gradient-rule {
+  background: linear-gradient(90deg, #7c3aed 0%, #c026d3 35%, #a855f7 65%, #7c3aed 100%);
+}
+
+/* Outlined display type used for the marquee + the "$29" numeral */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(244, 242, 251, 0.55);
+}
+
+.text-outline-thin {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(244, 242, 251, 0.35);
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* Keep compact landscape screens usable without changing the desktop design. */
+@media (max-width: 63.999rem) and (max-height: 34rem) and (orientation: landscape) {
+  #home {
+    min-height: 40rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .animate-marquee, [class*="animate-"] { animation: none !important; }
+}
