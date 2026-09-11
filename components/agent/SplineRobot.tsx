@@ -23,6 +23,9 @@ export const SPLINE_SCENE = "/spline/scene.splinecode?v=1";
  */
 const RUNTIME_URL = "/spline/runtime.js";
 
+/** Past this, treat the scene as never arriving and give the space back. */
+const LOAD_TIMEOUT_MS = 20_000;
+
 type SplineRuntime = {
   Application: new (canvas: HTMLCanvasElement) => Application;
 };
@@ -37,11 +40,44 @@ export default function SplineRobot({
   const onReadyRef = useRef(onReady);
   onReadyRef.current = onReady;
 
-  const [loaded, setLoaded] = useState(false);
+  const [status, setStatus] = useState<"loading" | "ready" | "failed">(
+    "loading",
+  );
 
   useEffect(() => {
     let app: Application | null = null;
     let cancelled = false;
+
+    const canvas = canvasRef.current;
+
+    const fail = (reason: string, err?: unknown) => {
+      if (cancelled) return;
+      console.error(`Spline scene unavailable (${reason})`, err ?? "");
+      setStatus("failed");
+      appRef.current = null;
+      app?.dispose();
+      app = null;
+    };
+
+    /*
+     * The scene's own background is white, so a canvas that is mounted but not
+     * genuinely rendering paints a white slab over the dark hero. Losing the GL
+     * context does exactly that — the shader fails to validate, the context
+     * goes away, and the last frame is the empty white ground — and it happens
+     * after load() has already resolved, so nothing else catches it.
+     */
+    const onContextLost = (event: Event) => {
+      event.preventDefault();
+      fail("webgl context lost");
+    };
+    canvas?.addEventListener("webglcontextlost", onContextLost);
+
+    // A scene that is merely slow is indistinguishable from one that will never
+    // arrive, and an empty hero beats a permanent placeholder.
+    const timeout = window.setTimeout(
+      () => fail("timed out"),
+      LOAD_TIMEOUT_MS,
+    );
 
     (async () => {
       try {
@@ -59,39 +95,45 @@ export default function SplineRobot({
           return;
         }
 
+        window.clearTimeout(timeout);
         appRef.current = app;
-        setLoaded(true);
+        setStatus("ready");
         onReadyRef.current?.(app);
       } catch (err) {
-        // A dead CDN or a blocked WebGL context should never break the hero.
-        console.error("Spline scene failed to load:", err);
+        window.clearTimeout(timeout);
+        fail("load failed", err);
       }
     })();
 
     return () => {
       cancelled = true;
+      window.clearTimeout(timeout);
+      canvas?.removeEventListener("webglcontextlost", onContextLost);
       appRef.current = null;
       app?.dispose();
     };
   }, []);
 
+  const ready = status === "ready";
+
   return (
     <div className="relative h-full w-full">
-      {/* holds the space steady while the scene streams in */}
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-700 ${
-          loaded ? "opacity-0" : "opacity-100"
-        }`}
-      >
-        <span className="h-14 w-14 rounded-full border-2 border-ink/20 border-t-ink/70 animate-spin" />
-      </div>
-
+      {/*
+        `visibility` rather than opacity alone: an opacity-0 canvas is still
+        composited, so any white frame it paints can flash through mid-load.
+        The hero keeps its own glow behind this, which is what shows when the
+        robot never arrives — a deliberate-looking empty space instead of a
+        spinner that never stops.
+      */}
       <canvas
         ref={canvasRef}
         className={`h-full w-full transition-opacity duration-1000 ${
-          loaded ? "opacity-100" : "opacity-0"
+          ready ? "opacity-100" : "opacity-0"
         }`}
+        style={{
+          visibility: ready ? "visible" : "hidden",
+          display: status === "failed" ? "none" : undefined,
+        }}
       />
     </div>
   );
