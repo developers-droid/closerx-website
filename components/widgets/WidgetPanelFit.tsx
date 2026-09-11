@@ -37,22 +37,31 @@ const PANEL_FIX_CSS = `
 
 @media (max-width: 640px) {
   .widget-container.widget-container {
-    width: min(92vw, 370px) !important;
+    width: min(88vw, 370px) !important;
     height: min(72vh, 520px) !important;
     height: min(72dvh, 520px) !important;
   }
 
-  /* Win back the height the shorter panel costs: the avatar is the single
-     biggest block, at 30vw plus 32px of margin. */
-  .widget-container .mic-button {
+  /* Win back the height the shorter panel costs. The avatar is the biggest
+     block and, being a flex child with the default shrink, a shorter panel
+     squashes the circle into an oval instead of scrolling — so pin its size.
+     Variants differ: some mark it .mic-button, the lite theme leaves it as a
+     plain w-40 button, so match the Tailwind class as a word. */
+  .widget-container .mic-button,
+  .widget-container button[class~="w-40"] {
+    flex: 0 0 auto !important;
     width: 104px !important;
     height: 104px !important;
+  }
+  .widget-container .mic-button {
     margin-bottom: 12px !important;
   }
-  .widget-container div:has(> .mic-button) {
-    padding-top: 16px !important;
-    padding-bottom: 16px !important;
+
+  /* The scroll area's own padding is worth 48px of the height we just freed. */
+  .widget-container [class~="p-6"][class~="overflow-y-auto"] {
+    padding: 16px !important;
   }
+
   .widget-container .transcript-box {
     height: 96px !important;
   }
