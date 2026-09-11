@@ -1,4 +1,5 @@
 import Script from "next/script";
+import WidgetPanelFit from "./WidgetPanelFit";
 
 const WIDGET_ORIGIN = "https://sidewidget.vercel.app";
 
@@ -33,6 +34,8 @@ export default function SnowieWidget() {
         src={`${WIDGET_ORIGIN}/react-widget-uv.iife.js`}
         strategy="afterInteractive"
       />
+
+      <WidgetPanelFit />
 
       <react-widget-uv agent_id={AGENT_ID} schema={SCHEMA} type="thunderemotionlite" />
     </>
