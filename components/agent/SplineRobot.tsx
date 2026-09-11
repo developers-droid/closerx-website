@@ -5,7 +5,10 @@ import type { Application } from "@splinetool/runtime";
 
 // Keep the published scene same-origin so browser privacy tools, corporate
 // proxies, and transient Spline CDN failures cannot prevent the hero loading.
-export const SPLINE_SCENE = "/spline/scene.splinecode";
+// The `v` marker exists so /spline/* can be served immutable (see
+// next.config.ts). Bump it whenever the scene is re-exported, or returning
+// visitors will keep the cached copy for a year.
+export const SPLINE_SCENE = "/spline/scene.splinecode?v=1";
 
 /**
  * Spline's npm runtime ships `new URL(...)` references to Draco/WASM files it

@@ -27,7 +27,22 @@ export default function RobotStage({ className = "" }: { className?: string }) {
     } catch {
       webgl = false;
     }
-    setEnabled(webgl && !reduced);
+
+    // The robot is decorative (the stage is aria-hidden), so it is never worth
+    // ~1.9MB on a metered or genuinely slow connection. navigator.connection is
+    // Chromium-only; elsewhere this reads undefined and the scene loads as
+    // before.
+    const conn = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
+    const expensive =
+      conn?.saveData === true ||
+      conn?.effectiveType === "slow-2g" ||
+      conn?.effectiveType === "2g";
+
+    setEnabled(webgl && !reduced && !expensive);
   }, []);
 
   return (
