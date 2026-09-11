@@ -92,3 +92,14 @@ same-origin `/spline/scene.splinecode` path.
   features → testimonials → pricing → footer, assembled in `app/page.tsx`.
 - Brand colours, fonts and the marquee/float keyframes are defined as Tailwind
   v4 theme tokens in `app/globals.css` — change them there, not in components.
+
+## Contact form → GoHighLevel
+
+Submissions POST to `app/api/contact/route.ts`, which upserts the lead into the
+GHL sub-account (tag `website-inquiry`, source `CloserX website`) and attaches
+the message as a note. Copy `.env.example` to `.env.local` and fill in:
+
+- `GHL_API_KEY` — private integration token (`pit-…`), needs `contacts.write`
+- `GHL_LOCATION_ID` — the sub-account id
+
+Both are server-only; set them in the hosting provider's env for production.

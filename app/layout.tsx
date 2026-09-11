@@ -36,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#483d8b",
+  themeColor: "#0d1220",
 };
 
 export default function RootLayout({
@@ -45,7 +45,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${jakarta.variable}`}>
       <body className="bg-page text-ink antialiased">
-        <div className="top-gradient-rule fixed inset-x-0 top-0 z-100 h-[3px]" />
         {children}
         <SnowieWidget />
       </body>

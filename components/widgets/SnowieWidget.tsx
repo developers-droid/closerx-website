@@ -1,9 +1,9 @@
 import Script from "next/script";
 
-const WIDGET_ORIGIN = "https://widgetcloserxstaticwebsite.vercel.app";
+const WIDGET_ORIGIN = "https://sidewidget.vercel.app";
 
-const AGENT_ID = "1d892f78-5ff9-4fc7-a8bf-5ba16af344ad";
-const SCHEMA = "c923987c-cd5f-4297-8dd7-791aad4f7511";
+const AGENT_ID = "361fccb3-f829-4372-abd7-bc9626e8b3a3";
+const SCHEMA = "6af30ad4-a50c-4acc-8996-d5f562b6987f";
 
 /**
  * Snowie voice agent widget.
@@ -34,7 +34,7 @@ export default function SnowieWidget() {
         strategy="afterInteractive"
       />
 
-      <react-widget-uv agent_id={AGENT_ID} schema={SCHEMA} type="autostart" />
+      <react-widget-uv agent_id={AGENT_ID} schema={SCHEMA} type="thunderemotionlite" />
     </>
   );
 }

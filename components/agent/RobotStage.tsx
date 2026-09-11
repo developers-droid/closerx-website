@@ -9,9 +9,9 @@ const SplineRobot = dynamic(() => import("./SplineRobot"), {
 });
 
 /**
- * Mounts the Spline agent browser-side only, and only when the device can
- * actually render it. The scene streams from Spline's CDN, so it is kept out
- * of the server bundle entirely.
+ * Mounts the locally vendored Spline agent browser-side only, and only when
+ * the device can actually render it. This keeps the heavy runtime out of the
+ * server bundle and gives reduced-motion visitors a clean static layout.
  */
 export default function RobotStage({ className = "" }: { className?: string }) {
   const [enabled, setEnabled] = useState(false);
